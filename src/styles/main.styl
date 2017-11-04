@@ -1,0 +1,49 @@
+@import 'grid.styl'
+
+.bd
+    //background-color #E9E9EA
+    center(600px)
+    grid()
+    .cell
+        //background-color #D5D5D7
+        padding rem-calc(20)
+        // половина когда большой экран
+        &.type1
+            cell(1, 1)
+            @media screen and (min-width: rem-calc(breakpoints[md]))
+                cell(1, 2)
+            //@media screen and (min-width: rem-calc(breakpoints[lg]))
+                //cell(1, 3)
+        // на весь экран
+        &.type2
+            cell(1, 1, 'center')
+            //@media screen and (min-width: rem-calc(breakpoints[lg]))
+                //cell(1, 3, 'center')
+        &.type3
+            cell(1, 1)
+            @media screen and (min-width: rem-calc(breakpoints[md]))
+                cell(1, 2)
+            @media screen and (min-width: rem-calc(breakpoints[lg]))
+                cell(1, 1)
+        &.type4
+            cell(1, 2)
+            @media screen and (min-width: rem-calc(breakpoints[lg]))
+                cell(2, 3)
+        &.type5
+            cell(1, 1, 'bottom')
+            @media screen and (min-width: rem-calc(breakpoints[sm]))
+                cell(1, 2, 'bottom')
+            @media screen and (min-width: rem-calc(breakpoints[md]))
+                cell(1, 1, 'bottom')
+            @media screen and (min-width: rem-calc(breakpoints[lg]))
+                cell(1, 3, 'bottom')
+        &.type6
+            cell(1, 1)
+            @media screen and (min-width: rem-calc(breakpoints[sm]))
+                cell(1, 3)
+        &.type7
+            cell(1, 2, 'center')
+            cell-offset(1, 4)
+            @media screen and (max-width: rem-calc(breakpoints[md]))
+                cell(1, 1, 'center')
+                cell-offset(0)

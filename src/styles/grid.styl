@@ -1,0 +1,163 @@
+rem-calc(value)
+    u = unit(value);
+    if (u is 'rem') {
+        return unit(value, u);
+    } else {
+        return unit(value / base-font-size, 'rem')
+    }
+
+grid(direction = 'row', cells-align = 'top', justify = '')
+    display flex
+    flex-wrap wrap
+    if cells-align is 'top'
+        align-items flex-start
+    if cells-align is 'bottom'
+        align-items flex-end
+    if cells-align is 'center'
+        align-items center
+    if cells-align is 'stretch'
+        align-items stretch
+    if direction is 'row'
+        flex-direction row
+    if direction is 'row-reverse'
+        flex-direction row-reverse
+    if direction is 'column'
+        flex-direction column
+    if direction is 'column-reverse'
+        flex-direction column-reverse
+    if justify is 'center'
+        justify-content center
+    if justify is 'start'
+        justify-content flex-start
+    if justify is 'end'
+        justify-content flex-end
+
+cell(i = 1, cols = columns, align = '', g = gutter)
+    if g is not 0
+        flex-basis: s('calc(100% * %s - %s)', i / cols, rem-calc(g))
+    else
+        flex-basis: s('calc(100% * %s)', i / cols)
+    min-width 0 // FF adjustment for responsive images
+    if g is not 0
+        margin: rem-calc(g / 2)
+    if align is 'top'
+        align-self flex-start
+    if align is 'bottom'
+        align-self flex-end
+    if align is 'center'
+        align-self center
+
+cell-offset(i = 1, cols = columns, g = gutter)
+    if g is not 0
+        margin-left: s('calc(100% * %s + (%s / 2))', i / cols, rem-calc(g)) !important
+    else
+        margin-left: s('calc(100% * %s)', i / cols) !important
+
+center(value, pad = null)
+    margin-left auto
+    margin-right auto
+    width 100%
+    u = unit(value)
+    if (u is 'rem' or u is '%')
+        max-width unit(value, u)
+    else
+        max-width rem-calc(value)
+    if (pad is null)
+        return
+    else
+        p = unit(pad)
+        if (p is 'rem' or p is '%')
+          padding-left  unit(pad, p)
+          padding-right  unit(pad, p)
+        else
+          padding-left rem-calc(pad)
+          padding-right rem-calc(pad)
+
+stack()
+    cell(1, 1)
+
+
+*
+    box-sizing border-box
+    margin 0
+    padding 0
+
+base-font-size = 16
+gutter = 20px
+columns = 12
+cellClassName = 's-grid-cell'
+gridClassName = 's-grid'
+
+breakpoints = {
+    sm: 0,
+    md: 640px,
+    lg: 1200px,
+    xlg: 1440px,
+    xxlg: 1920px
+}
+
+grid-cell-classes-generator(cols = columns, g = gutter, cellClass = cellClassName)
+    for key, value in breakpoints
+        @media screen and (min-width: rem-calc(value))
+            for i in range(1, cols, 1)
+                .{cellClass}-{key}-{i}
+                    cell(i, cols, g)
+                .{cellClass}-offset-{key}-{i}
+                    cell-offset(i, cols, g)
+
+grid-classes-generator(cols = columns, g = gutter, gridClass = gridClassName, cellClass = cellClassName)
+    for key, value in breakpoints
+        @media screen and (min-width: rem-calc(value))
+            for i in range(1, cols, 1)
+                .{gridClass}-{key}-{i} > [class~={cellClass}]
+                    cell(i, cols, g)
+
+// grid classes
+
+.{gridClassName}-top
+    grid(cells-align: 'top')
+
+.{gridClassName}-bottom
+    grid(cells-align: 'bottom')
+
+.{gridClassName}-center
+    grid(cells-align: 'center')
+
+.{gridClassName}-stretch
+    grid(cells-align: 'stretch')
+
+.{gridClassName}-justify-center
+    justify-content center
+
+.{gridClassName}-justify-start
+    justify-content flex-start
+
+.{gridClassName}-justify-end
+    justify-content flex-end
+
+.{gridClassName}-row
+    grid(direction: 'row')
+
+.{gridClassName}-row-reverse
+    grid(direction: 'row-reverse')
+
+.{gridClassName}-column
+    grid(direction: 'column')
+
+.{gridClassName}-column-reverse
+    grid(direction: 'column-reverse')
+
+grid-classes-generator()
+
+// cell styles
+
+.{cellClassName}-top
+    align-self flex-start
+
+.{cellClassName}-bottom
+    align-self flex-end
+
+.{cellClassName}-center
+    align-self center
+
+grid-cell-classes-generator()

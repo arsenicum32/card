@@ -1,0 +1,73 @@
+@import 'grid.styl'
+
+body
+  width 100%
+  margin 0
+  padding 0
+  font-family Helvetica Neue
+  img
+    width 100%
+  p
+    font-size 1.6em
+  button
+    font-size 1em
+    border 1px solid black
+    background white
+    font-weight bold
+  .center
+    text-align center
+    width 100%
+  input
+    width 100%
+    padding 20px
+    font-size 1.2em
+    outline none
+    border none
+    border 2px solid black
+  .bord
+    border-right 2px solid black
+    @media screen and (max-width: rem-calc(breakpoints[md]))
+      border-right none
+  button
+    text-decoration none
+    padding 20px
+    margin-top 20px
+    margin-bottom 30px
+    width 100%
+    text-align center
+    font-weight bolder
+    cursor pointer
+    color white
+    background black
+    font-size 1.2em
+    outline none
+    &:hover
+      color black
+      background white
+      border 2px solid black
+
+.circle
+  position relative
+  width 80px
+  height 80px
+  border-radius 50%
+  filter blur(20px)
+  animation-name anim
+  animation-duration 6s
+  animation-iteration-count infinite
+  z-index -100
+  opacity .5
+
+@keyframes anim
+  0%
+    background blue
+  20%
+    background red
+  40%
+    background magenta
+  60%
+    background yellow
+  80%
+    background pink
+  100%
+    background lightgreen
