@@ -11,7 +11,7 @@ webpack --config webpack.config.js --progress --profile --colors || exit 0;
  git checkout -b gh-pages
  git add .
  git commit -m "Deployed to Github Pages"
- git remote add origin https://github.com/arsenicum32/lila.git
+ git remote add origin https://github.com/arsenicum32/card.git
  git push --force -u origin gh-pages
  cd ..
  rm -rf dist/

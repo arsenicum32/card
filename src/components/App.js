@@ -126,6 +126,7 @@ const Counter = ()=> (
     <div className="block">
       <h2>график</h2>
       <Chart />
+      <small style={{position:'relative', top: '-30px'}}>с {moment().lang('ru').subtract(6, 'days').format('LL')}<br/> по {moment().lang('ru').subtract(1, 'days').format('LL')}</small>
     </div>
   </div>
 )
