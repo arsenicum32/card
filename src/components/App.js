@@ -46,7 +46,7 @@ let Chart = ({data})=>(
     data={data}
     isDate={false}
     ticks={0}
-    showLegends={true}
+    showLegends={false}
     //xParser={ x=> ( moment(x).fromNow() ) }
     //yMax={'10'}
     yMin={0}
