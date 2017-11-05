@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { filter , mfilter , Line , chart , MAIN , TABLE, datachart, ERROR  } from '../actions'
+import { getCookie } from '../helpers/cockie'
 
 import Chart from './chart'
 import Main from './main'
@@ -117,6 +118,10 @@ const Counter = ()=> (
 const App = () => (
   <div>
     <Counter />
+    <div className="Cpanel">
+      <a href='#' onClick={ e=> ins.get(`/form/${getCookie('uid')}`) } >сформировать</a>
+      <a href='#' onClick={ e=> ins.get(`/load/${getCookie('uid')}`) } >загрузить</a>
+    </div>
   </div>
 )
 
