@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-const instance = axios.create({
-  baseURL: 'http://192.168.4.1',
-  timeout: 5000
+const ins = axios.create({
+  baseURL: 'http://localhost:5000',
+  headers: {'X-Custom-Header': 'foobar'}
 });
 
-export default instance
+export default ins

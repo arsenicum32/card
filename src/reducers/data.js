@@ -13,10 +13,6 @@ const chartgenerator = _ => {
 const st = {
   background: 'white',
   main: {
-    'кол. открытий' : 100 ,
-    'ср. время работы' : 10 ,
-    'кол. сформированных МРД' : 70 ,
-    'кол. МРД, выгруженных в Эксель' : 10 ,
   },
   table: [
     {s: false, v: 'просмотры', q: 100, c: 'red'},
@@ -50,6 +46,10 @@ const data = (state = st, action ) => {
     case "mfilter":
       return {...state, mfilter: action.i }
       break;
+    case "main":
+      const AC = action;
+      delete AC.type
+      return {...state, main: AC }
     case "chart":
       const TB = JSON.parse(JSON.stringify(state.table));
       var ch = []

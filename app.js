@@ -13,10 +13,10 @@ app.get('/', (req,res)=>{
 
 app.get('/main', (req,res)=>{
   res.json({
-      'кол. открытий' : 100 ,
-      'ср. время работы' : 10 ,
-      'кол. сформированных МРД' : 70 ,
-      'кол. МРД, выгруженных в Эксель' : 10
+      'кол. открытий' : 0 ,
+      'ср. время работы' : 0 ,
+      'кол. сформированных МРД' : 0 ,
+      'кол. МРД, выгруженных в Эксель' : 0
   });
 })
 
@@ -35,7 +35,8 @@ var actions = ['open','leave','form','load'];
 
 for(var i=0; i<actions.length;i++){
   app.get(`/${actions[i]}/:uid`, (req,res)=> {
-    fs.appendFile('./log.txt', `${req.params.uid}:${new Date().getTime()}:${actions[i]}\n`, err=> res.send(err? 'err':'saved') );
+    console.log(req.path.split('/')[1]);
+    fs.appendFile('./log.txt', `${req.params.uid}:${new Date().getTime()}:${req.path.split('/')[1]}\n`, err=> res.send(err? 'err':'saved') );
   })
 }
 

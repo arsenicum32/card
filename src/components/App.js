@@ -1,75 +1,17 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { filter , mfilter , Line , chart  } from '../actions'
+import { filter , mfilter , Line , chart , MAIN  } from '../actions'
 
-import { setCookie , getCookie } from '../helpers/cockie'
+import Chart from './chart'
+import Main from './main'
+
+import './style.styl'
 
 import Chance from 'chance'
 import moment from 'moment'
 
 
 const chance = new Chance()
-
-import LineChart from 'react-linechart'
-import './chart.styl'
-
-import axios from 'axios'
-
-const uid = getCookie('uid') ? getCookie('uid') :  setCookie( 'uid',  chance.guid() , {
-  expires: new Date().getTime() * 1000
-});
-
-var ins = axios.create({
-  baseURL: 'http://localhost:5000',
-  headers: {'X-Custom-Header': 'foobar'}
-});
-
-ins.get('/open/'+uid).then(d=>{
-  console.log(d.data);
-})
-
-window.onbeforeunload = e=> {
-  ins.get('/leave/'+uid).then(d=>{
-    console.log(d.data);
-  })
-}
-
-import './style.styl'
-
-let Chart = ({data})=>(
-  <LineChart
-    width={300}
-    height={230}
-    hideXLabel={true}
-    hideYLabel={true}
-    hidePoints={true}
-    data={data}
-    isDate={false}
-    ticks={0}
-    showLegends={false}
-    //xParser={ x=> ( moment(x).fromNow() ) }
-    //yMax={'10'}
-    yMin={0}
-  />
-)
-
-Chart = connect( state=> ({data:state.data.chart}) )(Chart)
-
-
-let Main = ({ main })=>(
-  <div className="main">
-    <h2>общая информация</h2>
-    { Object.keys(main).map(d=>(
-      <div key={d} className="inf">
-        <div className="num">{ main[d]}</div>
-        <p>{d}</p>
-      </div>
-    )) }
-  </div>
-)
-Main = connect(
-  state => ({main: state.data.main})
-)(Main)
 
 let Details = ({table , sw, filter , mfilter , chL , dfil , fil })=> (
   <div className="block">
@@ -114,6 +56,12 @@ Details = connect(
 )(Details)
 
 
+const Dat = ()=> (
+  <small style={{position:'relative', top: '-30px'}}>с 
+    { moment().lang('ru').subtract(6, 'days').format('LL')}<br/>
+    по {moment().lang('ru').subtract(1, 'days').format('LL')}
+  </small>
+)
 
 const Counter = ()=> (
   <div className="counter">
@@ -126,7 +74,7 @@ const Counter = ()=> (
     <div className="block">
       <h2>график</h2>
       <Chart />
-      <small style={{position:'relative', top: '-30px'}}>с {moment().lang('ru').subtract(6, 'days').format('LL')}<br/> по {moment().lang('ru').subtract(1, 'days').format('LL')}</small>
+      <Dat />
     </div>
   </div>
 )
