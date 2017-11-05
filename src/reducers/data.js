@@ -1,3 +1,9 @@
+import moment from 'moment'
+
+import fromTo from '../helpers/fromto'
+
+var sub = ['days', 'month', 'week']
+
 const chartgenerator = _ => {
   let points = [];
   for(var i=0;i<10;i++){
@@ -11,22 +17,16 @@ const chartgenerator = _ => {
 }
 
 const st = {
-  background: 'white',
-  main: {
-  },
-  table: [
-    {s: false, v: 'просмотры', q: 100, c: 'red'},
-    {s: false, v: 'ср. онлайн', q: 10 , c: 'blue'},
-    {s: false, v: 'новые посетители', q: 50 , c: 'hotpink'},
-    {s: false, v: 'кол. сформированных МРД', q: 80 , c: 'gold'},
-    {s: false, v: 'кол. выгруженных в excel', q: 100, c: 'lightgreen'},
-  ],
+  error: false,
+  main: {},
+  table: [],
   sw: [
-    '1 ноября', 'вчера', 'сегодня'
+    moment().locale('ru').subtract(2,'days').format('dddd') , 'вчера', 'сегодня'
   ],
   filter: 0,
   mfilter: 2,
-  chart: []
+  chart: [],
+  datachart: []
 }
 const data = (state = st, action ) => {
   switch (action.type) {
@@ -38,8 +38,9 @@ const data = (state = st, action ) => {
     case "filter":
       let nsw = JSON.parse( JSON.stringify(state.sw) );
       nsw = action.i?
-      action.i == 1 ?  ['позапрошлая','прошлая','текущая'] : nsw= ['июнь', 'июль', 'август']
-      : ['1 ноября', 'вчера', 'сегодня'] ;
+      action.i == 1 ?  ['позапрошлая','прошлая','текущая'] :
+      nsw = [moment().locale('ru').subtract(2,'month').format('MMMM'), moment().locale('ru').subtract(1,'month').format('MMMM') , moment().locale('ru').format('MMMM')]
+      : [moment().locale('ru').subtract(2,'days').format('dddd'), 'вчера', 'сегодня'] ;
 
       return {...state, filter: parseInt(action.i), sw: nsw }
       break;
@@ -50,23 +51,28 @@ const data = (state = st, action ) => {
       const AC = action;
       delete AC.type
       return {...state, main: AC }
-    case "chart":
-      const TB = JSON.parse(JSON.stringify(state.table));
-      var ch = []
+    case "datachart":
+      var TB = JSON.parse(JSON.stringify(state.table));
+      var ch = action.chart
 
       for(let i=0;i< TB.length;i++){
+        TB[i].s ? ch[i].color = TB[i].c : ch[i].color = 'none';
+      }
+      return {...state , datachart: action.chart , chart: ch }
+      break;
+    case "chart":
+      var TB = JSON.parse(JSON.stringify(state.table));
+      var ch = JSON.parse(JSON.stringify(state.datachart));
 
-        if(TB[i].s){
-          ch.push( {
-            //id: 'test',
-            name: TB[i].v ,
-            color: TB[i].c ,
-            points: chartgenerator()
-          }) //.push( chartgenerator({name: 'TB[i].v' , color: 'red' }) )
-        }
+      for(let i=0;i< TB.length;i++){
+        TB[i].s ? ch[i].color = TB[i].c : ch[i].color = 'none';
       }
       return {...state, chart: ch }
       break;
+    case "table":
+      return {...state, table: action.table }
+    case "error":
+      return {...state, error: action.error }
     default:
       return state
   }
