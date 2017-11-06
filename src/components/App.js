@@ -113,15 +113,14 @@ const Counter = ()=> (
   </div>
 )
 
-
+// <div className="Cpanel">
+//   <a href='#' onClick={ e=> ins.get(`/form/${getCookie('uid')}`) } >сформировать</a>
+//   <a href='#' onClick={ e=> ins.get(`/load/${getCookie('uid')}`) } >загрузить</a>
+// </div>
 
 const App = () => (
   <div>
     <Counter />
-    <div className="Cpanel">
-      <a href='#' onClick={ e=> ins.get(`/form/${getCookie('uid')}`) } >сформировать</a>
-      <a href='#' onClick={ e=> ins.get(`/load/${getCookie('uid')}`) } >загрузить</a>
-    </div>
   </div>
 )
 

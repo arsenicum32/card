@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const ins = axios.create({
-  baseURL: 'http://46.101.126.64:5000/',
+  baseURL: BASE,
   headers: {'X-Custom-Header': 'foobar'}
 });
 

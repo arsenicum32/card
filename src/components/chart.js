@@ -7,7 +7,7 @@ import './chart.styl'
 
 let Chart = ({data ,m ,f})=>(
   <LineChart
-    width={300}
+    width={window.innerWidth*.6 > 500 ? 500 : window.innerWidth*.8 }
     height={230}
     hideXLabel={true}
     hideYLabel={true}
@@ -16,10 +16,11 @@ let Chart = ({data ,m ,f})=>(
     isDate={false}
     ticks={0}
     showLegends={false}
+    interpolate={'linear'}
     //xParser={ x=> ( moment(x).fromNow() ) }
-    //yMax={'10'}
-    xMin={fromTo(m,f).from}
-    xMax={fromTo(m,f).to}
+    yMax={'10'}
+    //xMin={fromTo(m,f).from + 1000}
+    //xMax={fromTo(m,f).to - 1000}
     yMin={0}
   />
 )
