@@ -127,7 +127,7 @@ var getAll = (callback , err , opt )=> {
 app.use(require('cors')());
 
 app.get('/', (req,res)=>{
-  res.send('test');
+  res.sendFile(__dirname + '/doc.txt');
 })
 
 var ntime = (t)=> {
