@@ -1,6 +1,11 @@
 var express = require('express');
 var fs = require('fs');
 
+var getAll = require('./getAll').getAll;
+var getPar = require('./getAll').getPar;
+
+var moment = require('moment');
+
 var app = express();
 
 app.use(require('cors')())
@@ -8,121 +13,6 @@ app.use(require('cors')())
 var port = 5000;
 
 var filename = "./log.txt";
-
-var getAll = (callback , err , opt )=> {
-  if(!callback ||!err){
-    return false;
-  }
-  fs.readFile(filename, 'utf8', (e,data)=> {
-    if (e) { err(e)}else{
-      var ac = data.split('\n');
-      var o = {
-        allvis: 0,
-        unic: 0,
-        time: 0,
-        form: 0,
-        load: 0,
-        log: [],
-        _allvis: 0,
-        _unic: 0,
-        _form: 0,
-        _load: 0,
-        _times: 0,
-        _ctimes: 0,
-        _been: [],
-        _stack: []
-      };
-      for(var i=0;i<ac.length;i++){
-        var obj = ac[i].split(':');
-        if(opt&&opt.from && obj[1] < opt.from){
-          continue;
-        }
-        if(opt&&opt.to && obj[1] > opt.to){
-          continue;
-        }
-        if(obj[2] == 'open'){
-          o._stack.push({
-            uid: obj[0],
-            stime: obj[1]
-          });
-
-          if(o._been.indexOf(obj[0])==-1){
-            o._been.push(obj[0]);
-            o.unic++;
-            o._unic++;
-          }
-          o.allvis++;
-          o._allvis++;
-
-          o.log.push({
-            allvis: o._allvis,
-            unic: o._unic,
-            form: o._form,
-            load: o._load,
-            time: obj[1]
-          })
-        }
-        else if( obj[2] == 'leave'){
-          for(var n = o._stack.length -1 ; n>0;n-- ){
-            //console.log(o._stack[n]);
-            if( o._stack[n] && o._stack[n].uid == obj[0] ){
-              o._stack[n].etime = obj[1];
-              break;
-            }
-          }
-          o._allvis>0 ? o._allvis--: void(0);
-          o._unic>0 ? o._unic--: void(0);
-          o._form>0? o._form--:void(0);
-          o._load>0? o._load--:void(0);
-
-          o.log.push({
-            allvis: o._allvis,
-            unic: o._unic,
-            form: o._form,
-            load: o._load,
-            time: obj[1]
-          })
-        }
-        else if(obj[2] == 'form'){
-          o.form++;
-          o._form++;
-          o.log.push({
-            allvis: o._allvis,
-            unic: o._unic,
-            form: o._form,
-            load: o._load,
-            time: obj[1]
-          })
-        }
-        else if(obj[2] == 'load'){
-          o.load++;
-          o._load++;
-          o.log.push({
-            allvis: o._allvis,
-            unic: o._unic,
-            form: o._form,
-            load: o._load,
-            time: obj[1]
-          })
-        }
-      }
-      for(var i=0;i<o._stack.length;i++){
-        if( o._stack[i] && o._stack[i].stime && o._stack[n].etime){
-          o._times = parseInt(o._stack[n].etime) - parseInt(o._stack[n].stime);
-          o._ctimes++;
-        }
-      }
-      o.time = Math.floor(o._times / o._ctimes);
-      o.time = o.time ? o.time : 0;
-      Object.keys(o).map(d=>{
-        d.indexOf("_")!=-1 ? delete o[d] : void(0);
-      })
-      console.log(o);
-      callback(o);
-    }
-  });
-}
-
 
 app.use(require('cors')());
 
@@ -144,17 +34,49 @@ var ntime = (t)=> {
   return tt;
 }
 
+// функция (from , to , param ) => number
+
 app.get('/main', (req,res)=>{
-  getAll(o=> {
-    res.json({
-        'кол. открытий' : o.allvis ,
-        'ср. время работы' : ntime(o.time) ,
-        'кол. сформированных МРД' : o.form ,
-        'кол. МРД, выгруженных в Эксель' : o.load
-    })
-  }, ()=>{
-    res.json({error: true})
-  })
+  var data = fs.readFileSync(filename, 'utf8');
+  var ac = data.split('\n');
+
+  var f = (d)=>{
+    return moment().subtract( d, 'days').unix()*1000
+  }
+
+  var t = new Date().getTime() ;
+
+  res.json([
+        [
+          'загрузок карты',
+          getPar(ac,f(1) , t , "allvis"),
+          getPar(ac,f(2),f(1),"allvis") ,
+          getPar(ac,f(3),f(2),"allvis"),
+          getPar(ac,f(7),t , "allvis")
+        ],
+        [
+          'ср. время работы',
+          getPar(ac,f(1),t, "time") ,
+          getPar(ac,f(2),f(1), "time") ,
+          getPar(ac,f(3),f(2), "time") ,
+          getPar(ac,f(7),t, "time")
+        ],
+        [
+
+          'сформированных МРД',
+          getPar(ac,f(1),t, "form") ,
+          getPar(ac,f(2),f(1), "form") ,
+          getPar(ac,f(3),f(2), "form") ,
+          getPar(ac,f(7),t, "form")
+        ],
+        [
+          'загрузок в excel',
+          getPar(ac,f(1),t, "load") ,
+          getPar(ac,f(2),f(1), "load") ,
+          getPar(ac,f(3),f(2), "load") ,
+          getPar(ac,f(7),t, "load")
+        ]
+  ])
 });
 
 
@@ -181,11 +103,10 @@ app.get('/det/:from/:to', (req,res)=>{
   var rd = ()=> (Math.floor(Math.random()*500))
   getAll(o=> {
     res.json({ table: [
-        {s: false, v: 'просмотры', q: o.allvis , c: 'red'},
-        {s: false, v: 'ср. онлайн', q: o.time , c: 'blue'},
-        {s: false, v: 'новые посетители', q: o.unic , c: 'hotpink'},
-        {s: false, v: 'кол. сформированных МРД', q: o.form , c: 'gold'},
-        {s: false, v: 'кол. выгруженных в excel', q: o.load , c: 'lightgreen'}
+        {s: true, v: 'загрузок карты', q: o.allvis , c: 'red'},
+        {s: false, v: 'ср. время работы', q: o.time , c: 'blue'},
+        {s: false, v: 'сформированных МРД', q: o.form , c: 'gold'},
+        {s: true, v: 'загрузок в excel', q: o.load , c: 'lightgreen'}
       ], chart: [
         {
           id: 0,
@@ -197,23 +118,17 @@ app.get('/det/:from/:to', (req,res)=>{
           id: 1,
           name: "online" ,
           color: "blue" ,
-          points: chartgenerator(o.log , "allvis")
+          points: chartgenerator(o.log , "time")
         },
         {
           id: 2,
           name: "newvis" ,
-          color: "hotpink" ,
-          points: chartgenerator(o.log , "unic")
-        },
-        {
-          id: 3,
-          name: "form" ,
           color: "gold" ,
           points: chartgenerator(o.log , "form")
         },
         {
-          id: 4,
-          name: "load" ,
+          id: 3,
+          name: "form" ,
           color: "lightgreen" ,
           points: chartgenerator(o.log , "load")
         }
