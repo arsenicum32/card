@@ -70,7 +70,7 @@ app.get('/main', (req,res)=>{
           getPar(ac,f(7),t, "form")
         ],
         [
-          'загрузок в excel',
+          'загрузок в Excel',
           getPar(ac,f(1),t, "load") ,
           getPar(ac,f(2),f(1), "load") ,
           getPar(ac,f(3),f(2), "load") ,
