@@ -18,25 +18,19 @@ import ins from '../helpers/rest'
 
 const chance = new Chance()
 
-let Details = ({table , sw, filter , mfilter , chL , dfil , fil })=> (
+let Details = ({table , filter , mfilter , chL , dfil , fil })=> (
   <div className="block">
     <h2>детализация</h2>
     <div className="panel">
-      <div className="sw">
-        {sw.map( (d,i)=>(
-          <span key={d}><a href="#" className={mfilter == i ? "active" : ""}
-          onClick={ e=> dfil(i , filter) }
-          href="#">{d}</a>&nbsp;</span>
-        ))}
-      </div>
       <div className="gl">
         {['по дням','по неделям','по месецам'].map((d,i)=> (
           <span key={i}><a className={filter == i ? "active" : ""}
           onClick={ e=> fil(i, mfilter) }
-          href="#">{d}</a>&nbsp;</span>
+          href="#">{d}</a>&nbsp; / </span>
         ))}
       </div>
     </div>
+    <p>показывать на графике:</p>
     <ul>
     { table.length ? table.map( (d,i)=> (
       <li key={i} onClick={ e=> chL(d.s, i) } style={{cursor:'pointer'}} >
@@ -49,7 +43,7 @@ let Details = ({table , sw, filter , mfilter , chL , dfil , fil })=> (
   </div>
 )
 Details = connect(
-  state => ({table: state.data.table , sw: state.data.sw, filter: state.data.filter , mfilter: state.data.mfilter }),
+  state => ({table: state.data.table, filter: state.data.filter , mfilter: state.data.mfilter }),
   dispatch => ({
     chL: (D,i)=> {
       dispatch(Line(i));
@@ -77,7 +71,7 @@ Details = connect(
 
 let Dat = ({m , f })=> (
   <small style={{position:'relative', top: '-30px'}}>
-    с { moment().locale('ru').subtract( (2-m) + 1, ['days', 'week', 'month'][f] ).format('LL')}<br/>
+    с {moment().locale('ru').subtract( (2-m) + 1, ['days', 'week', 'month'][f] ).format('LL')}<br/>
     по {moment().locale('ru').subtract( (2-m) , ['days', 'week', 'month'][f] ).format('LL')}
   </small>
 )
@@ -99,7 +93,7 @@ Error = connect(state=> ({er: state.data.error}))(Error)
 const Counter = ()=> (
   <div className="counter">
     <Error />
-    <h1>счетчик посещений</h1>
+    <h1>карьерная карта ГАЗ</h1>
     <hr/>
     <Main />
     <hr/>

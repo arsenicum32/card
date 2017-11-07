@@ -4,21 +4,10 @@ import fromTo from '../helpers/fromto'
 
 var sub = ['days', 'month', 'week']
 
-const chartgenerator = _ => {
-  let points = [];
-  for(var i=0;i<10;i++){
-    points.push({
-      x: ( new Date().getTime() - i*chance.integer({min:1900,max:2000}) ),
-      y: chance.integer({min:0,max:20})
-    })
-  }
-
-  return points
-}
 
 const st = {
   error: false,
-  main: {},
+  main: [],
   table: [],
   sw: [
     moment().locale('ru').subtract(2,'days').format('dddd') , 'вчера', 'сегодня'
@@ -48,8 +37,7 @@ const data = (state = st, action ) => {
       return {...state, mfilter: action.i }
       break;
     case "main":
-      const AC = action;
-      delete AC.type
+      const AC = action.tb;
       return {...state, main: AC }
     case "datachart":
       var TB = JSON.parse(JSON.stringify(state.table));
