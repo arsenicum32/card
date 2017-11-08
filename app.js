@@ -16,6 +16,11 @@ var filename = "./log.txt";
 
 app.use(require('cors')());
 
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+});
+
 app.get('/', (req,res)=>{
   res.sendFile(__dirname + '/doc.txt');
 })
