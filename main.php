@@ -17,7 +17,7 @@ if(isset($_GET['from'])){
 $sql = "SELECT * FROM log".$q;
 $result = $conn->query($sql);
 
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 header("Access-Control-Allow-Origin: *");
 
 if ($result->num_rows > 0) {
