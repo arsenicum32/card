@@ -13,6 +13,11 @@ if(isset($_GET['from'])){
     $q = "";
 }
 
+$date = new DateTime();
+$date->sub(new DateInterval('P1D'));
+
+
+$q1 = "SELECT COUNT(action) FROM log WHERE action='open' AND time BETWEEN FROM_UNIXTIME(".$date.") AND FROM_UNIXTIME(".time().")";
 
 $sql = "SELECT * FROM log".$q;
 $result = $conn->query($sql);
@@ -26,7 +31,7 @@ if ($result->num_rows > 0) {
     $res = [
       [
         'загрузок карты',
-        0,0,0,0
+        $conn->query($q1),0,0,0
       ],
       [
         'ср. время работы',
