@@ -4,19 +4,19 @@
 header('Content-Type: application/json');
 header("Access-Control-Allow-Origin: *");
 
-$chartgenerator = new Func("chartgenerator", function($log = null, $item = null) {
+$chartgenerator = function($log = null, $item = null) {
   $points = new Arr();
   for ($i = 0.0; $i < get($log, "length"); $i++) {
     call_method($points, "push", new Object("x", get(get($log, $i), "time"), "y", is(get(get($log, $i), $item)) ? get(get($log, $i), $item) : 0.0));
   }
   return $points;
-});
+};
 
 $ar = [ table=> [
-    [s=> true, v=> 'загрузок карты', q=> 0 , c=> 'red'],
-    [s=> false, v=> 'ср. время работы', q=> 0 , c=> 'blue'],
-    [s=> false, v=> 'сформированных МРД', q=> 0 , c=> 'gold'],
-    [s=> true, v=> 'загрузок в excel', q=> 0 , c=> 'lightgreen']
+    [s=> TRUE, v=> 'загрузок карты', q=> 0 , c=> 'red'],
+    [s=> FALSE, v=> 'ср. время работы', q=> 0 , c=> 'blue'],
+    [s=> FALSE, v=> 'сформированных МРД', q=> 0 , c=> 'gold'],
+    [s=> TRUE, v=> 'загрузок в excel', q=> 0 , c=> 'lightgreen']
   ], chart=> [
     [
       id=> 0,
@@ -43,6 +43,6 @@ $ar = [ table=> [
       points=> []
     ]
   ]
-]
+];
 
 echo json_encode($ar, JSON_UNESCAPED_UNICODE);
