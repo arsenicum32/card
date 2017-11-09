@@ -13,11 +13,9 @@ if(isset($_GET['from'])){
     $q = "";
 }
 
-$date = new DateTime();
-$date->sub(new DateInterval('P1D'));
 
 
-$q1 = "SELECT COUNT(action) FROM log WHERE action='open' AND time BETWEEN FROM_UNIXTIME(".$date.") AND FROM_UNIXTIME(".time().")";
+$q1 = "SELECT action FROM log WHERE action='open' AND time BETWEEN FROM_UNIXTIME(". time() - 24*3600 .") AND FROM_UNIXTIME(".time().")";
 
 $sql = "SELECT * FROM log".$q;
 $result = $conn->query($sql);

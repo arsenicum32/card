@@ -3,10 +3,12 @@ header('Content-Type: application/json;charset=utf-8');
 header('charset: utf-8');
 header("Access-Control-Allow-Origin: *");
 
+$date = time() - 24*3600;
+
 $res = [
   [
     'загрузок карты',
-    0,0,0,0
+    $date ,0,0,0
   ],
   [
     'ср. время работы',
