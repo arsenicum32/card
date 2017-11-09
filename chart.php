@@ -46,3 +46,4 @@ $ar = [ table=> [
 ];
 
 echo json_encode($ar, JSON_UNESCAPED_UNICODE);
+?><html>
