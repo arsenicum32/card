@@ -29,7 +29,7 @@ if ($result->num_rows > 0) {
     $res = [
       [
         'загрузок карты',
-        $conn->query($q1),0,0,0
+        mysql_fetch_assoc( $conn->query($q1) )['total'] ,0,0,0
       ],
       [
         'ср. время работы',
