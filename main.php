@@ -15,7 +15,12 @@ if(isset($_GET['from'])){
 
 
 
-$q1 = "SELECT count(*) as total FROM log WHERE action='open' AND time BETWEEN FROM_UNIXTIME(". time() - 24*3600 .") AND FROM_UNIXTIME(".time().")";
+$q1 = "SELECT l.action,
+(select coalesce((SUM(l1.sitetime) / COUNT(l1.sitetime)),0) FROM log l1 WHERE DATE(l1.time) = DATE(Now()) and l1.action=l.action) as today,
+(select coalesce((SUM(l1.sitetime) / COUNT(l1.sitetime)),0) FROM log l1 WHERE DATE(l1.time) = DATE(DATE_ADD(Now(), INTERVAL -1 DAY)) and l1.action=l.action) as yesterday,
+(select coalesce((SUM(l1.sitetime) / COUNT(l1.sitetime)),0) FROM log l1 WHERE DATE(l1.time) = DATE(DATE_ADD(Now(), INTERVAL -2 DAY)) and l1.action=l.action) as thirdday,
+(select coalesce((SUM(l1.sitetime) / COUNT(l1.sitetime)),0) FROM log l1 WHERE DATE(l1.time) between DATE(DATE_ADD(Now(), INTERVAL -7 DAY)) and DATE(Now()) and l1.action=l.action) as week
+from log l group by l.action";
 
 $sql = "SELECT * FROM log".$q;
 $result = $conn->query($sql);
@@ -29,7 +34,7 @@ if ($result->num_rows > 0) {
     $res = [
       [
         'загрузок карты',
-        mysql_fetch_assoc( $conn->query($q1) )['total'] ,0,0,0
+        0,0,0,0
       ],
       [
         'ср. время работы',
@@ -43,7 +48,8 @@ if ($result->num_rows > 0) {
       [
         'загрузок в Excel',
         0,0,0,0
-      ]
+      ],
+      [$conn->query($q1)]
     ];
     while($row = $result->fetch_assoc()) {
         array_push($stack, [uid=> $row["uid"], time=> strtotime($row["time"]), stime=> $row["sitetime"] , action=> $row["action"],more=> $row["more"]]);
