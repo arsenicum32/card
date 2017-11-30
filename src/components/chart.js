@@ -5,6 +5,9 @@ import fromTo from '../helpers/fromto'
 import LineChart from 'react-linechart'
 import './chart.styl'
 
+
+// Компонента которая отображает график (библиотека LineChart )
+
 let Chart = ({data ,m ,f})=>(
   <LineChart
     width={window.innerWidth*.6 > 500 ? 500 : window.innerWidth*.8 }

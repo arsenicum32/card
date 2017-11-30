@@ -1,5 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import moment from 'moment'
+
+
+// Компонент, который показывает основную информацию
 
 let Main = ({ main })=>(
   <div className="main">
@@ -9,8 +13,13 @@ let Main = ({ main })=>(
           <th>статистика</th>
           <th>сегодня</th>
           <th>вчера</th>
-          <th>позавчера</th>
-          <th>за 7 дней</th>
+          <th>в среднем за {
+            moment().locale('ru').format('dddd') == 'пятница' ? 'пятницу':
+            moment().locale('ru').format('dddd') == 'суббота' ? 'субботу':
+            moment().locale('ru').format('dddd') == 'среда' ? 'среду':
+            moment().locale('ru').format('dddd')
+          }</th>
+          <th>в среднем за 7 дней</th>
         </tr>
       { main.length ?
         main.map( (d,i)=>(

@@ -36,14 +36,39 @@ a
   p
     width 80%
     font-size .2em
+
+h2
+h3
+  font-weight normal
 h1
   width 80%
   margin-left 10%
+  font-size 1.4em
+  font-weight normal
 hr
   color none
   border 1px solid black
   width 80%
-  margin auto
+  margin-top 6%
+
+table
+  //border 1px solid #eee
+  //margin-top 7%
+  //margin-bottom 7%
+  td:first-child
+    white-space pre
+  td
+    padding-top 12px
+    width 400px
+    font-size .9em
+  th
+    //border 1px solid #eee
+  th
+    margin 0
+    padding 0
+    text-align left
+    font-weight 600
+
 
 .loading
   width 100%
@@ -76,17 +101,13 @@ ul
       top 2px
       &:hover
         background black
-th
-  text-align left
 
-table
-  margin-top 7%
-  margin-bottom 7%
+
 .main
   display flex
   flex-wrap wrap
 .counter
-  width 600px
+  width 800px
   margin auto
   background #fff
 

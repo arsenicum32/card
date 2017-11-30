@@ -10,34 +10,22 @@ import { setCookie , getCookie } from './helpers/cockie'
 import fromTo from './helpers/fromto'
 
 
-const uid = getCookie('uid') ? getCookie('uid') :  setCookie( 'uid',  chance.guid() , {
-  expires: new Date().getTime() * 1000
-});
-
-ins.get('/open/'+uid).then(d=>{
-  console.log(d.data);
-})
-
-window.onbeforeunload = e=> {
-  ins.get('/leave/'+uid).then(d=>{
-    console.log(d.data);
-  })
-}
-
-
 let store = createStore(todoApp)
 
+// Получение с backend данных
 
-ins.get('/main').then(d=>
+ins.get('/main.php').then(d=>{
+  console.log(d.data);
   store.dispatch(MAIN(d.data))
-).catch(e=> store.dispatch(ERROR(e)) )
+}).catch(e=> store.dispatch(ERROR(e)) )
 
-ins.get(`/det/${fromTo(2,0).from}/${fromTo(2,0).to}`).then(d=>{
+ins.get(`/chart.php?from=${fromTo(2,0).from}&to=${fromTo(2,0).to}`).then(d=>{
+  console.log(d.data);
   store.dispatch(TABLE(d.data.table))
   store.dispatch(datachart(d.data.chart))
 })
 
-
+// Стандартный редукс сборщик
 
 render(
   <Provider store={store}>

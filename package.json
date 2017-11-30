@@ -1,12 +1,11 @@
 {
-  "name": "lila",
+  "name": "counter",
   "version": "1.0.0",
-  "description": "lila site",
+  "description": "counter site",
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "build": "webpack --config webpack.config.js --progress --profile --colors",
-    "deploy": "./deploy-ghpages.sh"
+    "build": "webpack --config webpack.config.js --progress --profile --colors"
   },
   "author": "ars33",
   "license": "MIT",
@@ -59,8 +58,6 @@
     "react-linechart": "^1.1.12",
     "react-redux": "^4.0.6",
     "redux": "^3.0.6",
-    "socket.io": "^2.0.4",
-    "socket.io-client": "^2.0.4",
     "style-loader": "^0.13.2",
     "svg-inline-react": "^3.0.0"
   }

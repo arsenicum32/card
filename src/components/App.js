@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import { filter , mfilter , Line , chart , MAIN , TABLE, datachart, ERROR  } from '../actions'
 import { getCookie } from '../helpers/cockie'
 
+
+// Импортим компоненты
 import Chart from './chart'
 import Main from './main'
 
@@ -18,12 +20,15 @@ import ins from '../helpers/rest'
 
 const chance = new Chance()
 
+
+// Отображать таблицу
+
 let Details = ({table , filter , mfilter , chL , dfil , fil })=> (
   <div className="block">
     <h2>детализация</h2>
     <div className="panel">
       <div className="gl">
-        {['по дням','по неделям','по месецам'].map((d,i)=> (
+        {['по дням','по неделям','по месяцам'].map((d,i)=> (
           <span key={i}><a className={filter == i ? "active" : ""}
           onClick={ e=> fil(i, mfilter) }
           href="#">{d}</a>&nbsp; / </span>
@@ -52,7 +57,7 @@ Details = connect(
     fil: (i, f)=> {
       dispatch(filter(i))
       let { from , to } = fromTo(i,f);
-      ins(`/det/${from}/${to}`).then(d=> {
+      ins(`/chart.php?from=${from}&to=${to}`).then(d=> {
         dispatch(TABLE(d.data.table))
         dispatch(datachart(d.data.chart))
       } ).catch(e=> dispatch(ERROR(e)) )
@@ -60,7 +65,7 @@ Details = connect(
     dfil: (i , f)=> {
       dispatch(mfilter(i))
       let { from , to } = fromTo(f,i);
-      ins(`/det/${from}/${to}`).then(d=> {
+      ins(`/chart.php?from=${from}&to=${to}`).then(d=> {
         dispatch(TABLE(d.data.table))
         dispatch(datachart(d.data.chart))
       } ).catch(e=> dispatch(ERROR(e)) )
@@ -68,6 +73,7 @@ Details = connect(
   })
 )(Details)
 
+// Указание дат (снизу слева) в таблице
 
 let Dat = ({m , f })=> (
   <small style={{position:'relative', top: '-30px'}}>
@@ -80,6 +86,8 @@ Dat = connect(
   state=> ({m: state.data.mfilter , f: state.data.filter })
 )(Dat)
 
+// Блок ошибки
+
 let Error = ({er})=> (
   <div className="error" style={{display: er ? 'block': 'none'}}>
     <h1>Connect server Error</h1>
@@ -90,10 +98,13 @@ let Error = ({er})=> (
 Error = connect(state=> ({er: state.data.error}))(Error)
 
 
+
+// Основной блок счетчика
+
 const Counter = ()=> (
   <div className="counter">
     <Error />
-    <h1>карьерная карта ГАЗ</h1>
+    <h1>Карьерная карта ГАЗ</h1>
     <hr/>
     <Main />
     <hr/>
@@ -107,10 +118,6 @@ const Counter = ()=> (
   </div>
 )
 
-// <div className="Cpanel">
-//   <a href='#' onClick={ e=> ins.get(`/form/${getCookie('uid')}`) } >сформировать</a>
-//   <a href='#' onClick={ e=> ins.get(`/load/${getCookie('uid')}`) } >загрузить</a>
-// </div>
 
 const App = () => (
   <div>
